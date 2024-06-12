@@ -6,13 +6,16 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.0</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>ru.taf</groupId>
 	<artifactId>digital-bookkeeping</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<name>Project 7 - digital-bookkeeping with microservices</name>
-	<description>Demo project for Spring Boot</description>
+	<modules>
+		<module>bookkeeping-service</module>
+	</modules>
 	<properties>
 		<java.version>21</java.version>
 	</properties>
@@ -21,16 +24,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
