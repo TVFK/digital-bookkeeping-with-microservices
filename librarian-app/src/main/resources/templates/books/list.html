@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+</head>
+<body>
+    <div th:each="book : ${books}">
+
+        <a th:href="@{/books/{id}(id=${book.getId()})}" th:text="${book.title} + ', ' + ${book.creationYear}">book</a>
+
+    </div>
+
+    <br/>
+    <hr/>
+
+    <a th:href="@{/books/create}">Добавить новую книгу</a>
+
+    <br/>
+
+</body>
+</html>

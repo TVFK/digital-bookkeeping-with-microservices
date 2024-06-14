@@ -7,9 +7,9 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.taf.services.exception.BookAlreadyTakenException;
-import ru.taf.services.exception.BookNotFoundException;
-import ru.taf.services.exception.PersonNotFoundException;
+import ru.taf.services.exceptions.BookAlreadyTakenException;
+import ru.taf.services.exceptions.BookNotFoundException;
+import ru.taf.services.exceptions.PersonNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

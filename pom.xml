@@ -15,7 +15,8 @@
 	<name>Project 7 - digital-bookkeeping with microservices</name>
 	<modules>
 		<module>bookkeeping-service</module>
-	</modules>
+        <module>librarian-app</module>
+    </modules>
 	<properties>
 		<java.version>21</java.version>
 	</properties>

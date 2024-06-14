@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit book information</title>
+</head>
+<body>
+    <form th:method="POST" th:action="@{/books/{id}/edit(id=${book.getId()})}" th:object="${book}">
+
+        <label for="name">Book name</label>
+        <input id="name" type="text" th:field="*{title}">
+        <div style="color: red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Name error</div>
+
+        <br/>
+        <label for="year_creation">Year of creation</label>
+        <input id="year_creation" type="text" th:field="*{creationYear}">
+        <div style="color: red" th:if="${#fields.hasErrors('creationYear')}" th:errors="*{creationYear}">Name error</div>
+
+        <br/>
+
+        <label for="author">Author</label>
+        <input id="author" type="text" th:field="*{author}">
+        <div style="color: red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Name error</div>
+
+        <br/>
+        <hr/>
+
+        <input type="submit" value="Редактировать"/>
+    </form>
+</body>
+</html>

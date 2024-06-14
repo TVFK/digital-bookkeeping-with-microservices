@@ -1,4 +1,4 @@
-package ru.taf.services.exception;
+package ru.taf.client.exceptions;
 
 public class BookNotFoundException extends RuntimeException{
     public BookNotFoundException(String message) {

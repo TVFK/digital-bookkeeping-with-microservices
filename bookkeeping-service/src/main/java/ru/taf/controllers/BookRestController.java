@@ -3,25 +3,24 @@ package ru.taf.controllers;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.taf.entities.Book;
-import ru.taf.entities.Person;
 import ru.taf.services.BooksService;
 import ru.taf.services.PeopleService;
+
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/books/{bookId:\\d+}")
 @AllArgsConstructor
-public class BookController {
+public class BookRestController {
 
-    private final PeopleService peopleService;
     private final BooksService booksService;
 
     @ModelAttribute("book")
-    public Book getBook(@PathVariable("bookId") int bookId) {
+    public Book getProduct(@PathVariable("bookId") int bookId) {
         return booksService.findBook(bookId);
     }
 

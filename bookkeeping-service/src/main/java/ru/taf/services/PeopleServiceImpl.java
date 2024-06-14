@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.taf.entities.Person;
 import ru.taf.repositories.PeopleRepository;
-import ru.taf.services.exception.PersonNotFoundException;
+import ru.taf.services.exceptions.PersonNotFoundException;
 
 import java.util.List;
 
@@ -16,29 +16,33 @@ public class PeopleServiceImpl implements PeopleService {
 
     private final PeopleRepository peopleRepository;
 
-    public List<Person> findAll() {
-        return peopleRepository.findAll();
+    public List<Person> findAllPeople(String filter) {
+        if(filter != null && !filter.isBlank()){
+            return peopleRepository.findAllByNameLikeIgnoreCase(filter);
+        } else {
+            return peopleRepository.findAll();
+        }
     }
 
-    public Person findOne(int personId) {
+    public Person findPerson(Integer personId) {
         return peopleRepository.findById(personId).orElseThrow(() ->
-                new PersonNotFoundException("Person not found" + personId));
+                new PersonNotFoundException("Person with id: %d not found".formatted(personId)));
     }
 
     @Transactional
-    public void save(Person person) {
-        peopleRepository.save(person);
+    public Person createPerson(Person person) {
+        return peopleRepository.save(person);
     }
 
     @Transactional
-    public void update(int id, Person updatedPerson) {
-        updatedPerson.setId(id);
+    public void updatePerson(Integer personId, Person updatedPerson) {
+        updatedPerson.setId(personId);
         peopleRepository.save(updatedPerson);
     }
 
     @Transactional
-    public void delete(int id) {
-        peopleRepository.deleteById(id);
+    public void deletePerson(Integer personId) {
+        peopleRepository.deleteById(personId);
     }
 
 }

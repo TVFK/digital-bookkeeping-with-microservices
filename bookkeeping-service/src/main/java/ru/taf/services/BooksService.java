@@ -1,21 +1,22 @@
 package ru.taf.services;
 
-import org.springframework.data.domain.Page;
 import ru.taf.entities.Book;
+
+import java.util.List;
 
 public interface BooksService {
 
-    Page<Book> findAllBooks(String filter, int pageNumber, int booksPerPage, boolean sortByYear);
+    List<Book> findAllBooks(String filter, int pageNumber, int booksPerPage, boolean sortByYear);
 
-    Book findBook(int bookId);
+    Book findBook(Integer bookId);
 
     Book save(Book book);
 
-    void update(int bookId, Book updatedBooks);
+    void update(Integer bookId, Book updatedBooks);
 
-    void delete(int bookId);
+    void delete(Integer bookId);
 
-    void setBook(int personId, int bookId);
+    void setBook(Integer personId, Integer bookId);
 
-    void liberateBook(int bookId);
+    void liberateBook(Integer bookId);
 }

@@ -11,23 +11,24 @@ import org.springframework.web.util.UriComponentsBuilder;
 import ru.taf.entities.Book;
 import ru.taf.services.BooksService;
 
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/books")
-public class BooksController {
+public class BooksRestController {
 
     private final BooksService booksService;
 
     @GetMapping
-    public ResponseEntity<Page<Book>> findBooks(
+    public ResponseEntity<List<Book>> findBooks(
             @RequestParam(value = "filter", required = false) String filter,
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(value = "books_per_page", required = false, defaultValue = "10") int booksPerPage,
-            @RequestParam(value = "sort_by_year", required = false) boolean sort_by_year) {
+            @RequestParam(value = "booksPerPage", required = false, defaultValue = "10") int booksPerPage,
+            @RequestParam(value = "sortByYear", required = false) boolean sortByYear) {
 
-        Page<Book> books = booksService.findAllBooks(filter, page, booksPerPage, sort_by_year);
+        List<Book> books = booksService.findAllBooks(filter, page, booksPerPage, sortByYear);
         return ResponseEntity.ok(books);
     }
 
@@ -47,8 +48,9 @@ public class BooksController {
             Book createdBook = booksService.save(book);
             return ResponseEntity
                     .created(uriComponentsBuilder
-                            .replacePath("/books/{bookId}")
-                            .build(Map.of("bookId", createdBook.getId())))
+                            .path("/books/{bookId}")
+                            .buildAndExpand(createdBook.getgetId())
+                            .toUri())
                     .body(createdBook);
         }
     }

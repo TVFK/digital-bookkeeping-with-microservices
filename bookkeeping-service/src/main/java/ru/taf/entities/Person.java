@@ -38,14 +38,4 @@ public class Person {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Book> books;
-
-    public void addBook(Book book) {
-        books.add(book);
-        book.setOwner(this);
-    }
-
-    public void returnBook(Book book) {
-        books.remove(book);
-        book.setOwner(null);
-    }
 }

@@ -1,0 +1,6 @@
+server:
+  port: 8081
+
+services:
+  bookkeeping:
+    uri: http://localhost:8080
