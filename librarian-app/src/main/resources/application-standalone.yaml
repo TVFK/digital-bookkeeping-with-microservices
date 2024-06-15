@@ -1,0 +1,25 @@
+server:
+  port: 8081
+
+services:
+  bookkeeping:
+    uri: http://localhost:8080
+    registration-id: keycloak
+
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8082/realms/digital-bookkeeping
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: librarian-app
+            client-secret: twqt30F7zVKXfTeGZDTjXouWn1RsEHd7
+            scope:
+              - openid
+              - view_library
+              - edit_library
+              - microprofile-jwt

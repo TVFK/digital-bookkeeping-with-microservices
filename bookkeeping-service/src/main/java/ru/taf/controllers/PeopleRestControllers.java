@@ -38,7 +38,7 @@ public class PeopleRestControllers {
         return ResponseEntity
                 .created(uriComponentsBuilder
                         .path("/books/{bookId}")
-                        .buildAndExpand(createdPerson.getgetId())
+                        .buildAndExpand(createdPerson.getId())
                         .toUri())
                 .body(createdPerson);
     }

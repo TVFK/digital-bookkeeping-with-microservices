@@ -49,7 +49,7 @@ public class BooksRestController {
             return ResponseEntity
                     .created(uriComponentsBuilder
                             .path("/books/{bookId}")
-                            .buildAndExpand(createdBook.getgetId())
+                            .buildAndExpand(createdBook.getId())
                             .toUri())
                     .body(createdBook);
         }
