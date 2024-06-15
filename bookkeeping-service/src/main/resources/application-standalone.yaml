@@ -3,9 +3,11 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/bookkeeping-db
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5433/bookkeeping-db
+    username: librarian
+    password: librarian
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
   security:
     oauth2:
       resourceserver:
