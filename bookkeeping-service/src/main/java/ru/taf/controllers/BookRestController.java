@@ -8,9 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.taf.entities.Book;
 import ru.taf.services.BooksService;
-import ru.taf.services.PeopleService;
-
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/books/{bookId:\\d+}")
@@ -20,7 +17,7 @@ public class BookRestController {
     private final BooksService booksService;
 
     @ModelAttribute("book")
-    public Book getProduct(@PathVariable("bookId") int bookId) {
+    public Book getBook(@PathVariable("bookId") int bookId) {
         return booksService.findBook(bookId);
     }
 
@@ -30,9 +27,9 @@ public class BookRestController {
     }
 
     @PatchMapping
-    public ResponseEntity<?> update(@PathVariable("bookId") int bookId,
-                                    @Valid @RequestBody Book book,
-                                    BindingResult bindingResult) throws BindException {
+    public ResponseEntity<?> updateBook(@PathVariable("bookId") int bookId,
+                                        @Valid @RequestBody Book book,
+                                        BindingResult bindingResult) throws BindException {
 
         if (bindingResult.hasErrors()) {
             if (bindingResult instanceof BindException exception) {
@@ -41,7 +38,7 @@ public class BookRestController {
                 throw new BindException(bindingResult);
             }
         } else {
-            this.booksService.update(bookId, book);
+            this.booksService.updateBook(bookId, book);
             return ResponseEntity.noContent()
                     .build();
         }
@@ -61,8 +58,8 @@ public class BookRestController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@PathVariable("bookId") int bookId) {
-        booksService.delete(bookId);
+    public ResponseEntity<Void> deleteBook(@PathVariable("bookId") int bookId) {
+        booksService.deleteBook(bookId);
         return ResponseEntity.noContent().build();
     }
 }

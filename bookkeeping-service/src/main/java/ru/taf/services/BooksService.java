@@ -10,11 +10,11 @@ public interface BooksService {
 
     Book findBook(Integer bookId);
 
-    Book save(Book book);
+    Book saveBook(Book book);
 
-    void update(Integer bookId, Book updatedBooks);
+    void updateBook(Integer bookId, Book updatedBooks);
 
-    void delete(Integer bookId);
+    void deleteBook(Integer bookId);
 
     void setBook(Integer personId, Integer bookId);
 

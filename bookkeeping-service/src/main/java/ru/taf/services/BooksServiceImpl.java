@@ -46,25 +46,25 @@ public class BooksServiceImpl implements BooksService {
     }
 
     @Transactional
-    public Book save(Book book) {
+    public Book saveBook(Book book) {
         return booksRepository.save(book);
     }
 
     @Transactional
-    public void update(Integer id, Book updatedBooks) {
+    public void updateBook(Integer id, Book updatedBooks) {
         updatedBooks.setId(id);
         booksRepository.save(updatedBooks);
     }
 
     @Transactional
-    public void delete(Integer id) {
+    public void deleteBook(Integer id) {
         booksRepository.deleteById(id);
     }
 
     @Transactional
     public void setBook(Integer personId, Integer bookId) {
         Person person = peopleRepository.findById(personId).orElseThrow(() ->
-                new PersonNotFoundException("Person with id: %d not found ".formatted(personId)));
+                new PersonNotFoundException("Person with id: %d not found".formatted(personId)));
         Book book = booksRepository.findById(bookId).orElseThrow(() ->
                 new BookNotFoundException("Book with id: %d not found ".formatted(bookId)));
 

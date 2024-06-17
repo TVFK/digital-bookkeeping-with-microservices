@@ -2,7 +2,6 @@ package ru.taf.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -12,7 +11,6 @@ import ru.taf.entities.Book;
 import ru.taf.services.BooksService;
 
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -45,7 +43,7 @@ public class BooksRestController {
                 throw new BindException(bindingResult);
             }
         } else {
-            Book createdBook = booksService.save(book);
+            Book createdBook = booksService.saveBook(book);
             return ResponseEntity
                     .created(uriComponentsBuilder
                             .path("/books/{bookId}")
