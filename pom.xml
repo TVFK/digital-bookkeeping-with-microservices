@@ -16,6 +16,7 @@
 	<modules>
 		<module>bookkeeping-service</module>
         <module>librarian-app</module>
+        <module>admin-server</module>
     </modules>
 
 	<properties>

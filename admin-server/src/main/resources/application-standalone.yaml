@@ -1,0 +1,27 @@
+server:
+  port: 8083
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8082/realms/digital-bookkeeping
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8082/realms/digital-bookkeeping
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            authorization-grant-type: client_credentials
+            scope:
+              - metrics
+            client-id: admin-service
+            client-secret: AZI64bu9zyjVku8eOYyLBcvi5IjuH9ZK
+          login:
+            provider: keycloak
+            scope:
+              - metrics
+              - openid
+            client-id: admin-service
+            client-secret: AZI64bu9zyjVku8eOYyLBcvi5IjuH9ZK

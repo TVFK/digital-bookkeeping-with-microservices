@@ -7,6 +7,14 @@ services:
     registration-id: keycloak
 
 spring:
+  boot:
+    admin:
+      client:
+        url: http://localhost:8083
+        instance:
+          name: librarian-app
+          service-host-type: ip
+        enabled: true
   security:
     oauth2:
       client:
@@ -23,3 +31,23 @@ spring:
               - view_library
               - edit_library
               - microprofile-jwt
+          metrics:
+            provider: keycloak
+            client-id: librarian-app
+            client-secret: twqt30F7zVKXfTeGZDTjXouWn1RsEHd7
+            authorization-grant-type: client_credentials
+            scope:
+              - metrics_server
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8082/realms/digital-bookkeeping
+management:
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'

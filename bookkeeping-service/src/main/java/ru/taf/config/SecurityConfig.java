@@ -16,13 +16,15 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(authorizationManagerRequest -> {
                     authorizationManagerRequest
-                            .requestMatchers(HttpMethod.GET).hasAuthority("SCOPE_view_library")
                             .requestMatchers(HttpMethod.POST).hasAuthority("SCOPE_edit_library")
                             .requestMatchers(HttpMethod.PATCH).hasAuthority("SCOPE_edit_library")
                             .requestMatchers(HttpMethod.DELETE).hasAuthority("SCOPE_edit_library")
+                            .requestMatchers("/actuator/**").hasAuthority("SCOPE_metrics")
+                            .requestMatchers(HttpMethod.GET).hasAuthority("SCOPE_view_library")
                             .anyRequest().denyAll();
                 })
                 .csrf(CsrfConfigurer::disable)
+                .oauth2Client(Customizer.withDefaults())
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer

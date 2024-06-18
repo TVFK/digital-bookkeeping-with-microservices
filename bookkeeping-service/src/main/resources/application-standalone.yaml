@@ -13,3 +13,33 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8082/realms/digital-bookkeeping
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8082/realms/digital-bookkeeping
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: bookkeeping-service
+            client-secret: OXtKlZ844xE9MtcMmUqJ76zmryQ9lKQH
+            authorization-grant-type: client_credentials
+            scope:
+              - metrics_server
+  boot:
+    admin:
+      client:
+        enabled: true
+        instance:
+          name: bookkeeping-service
+          service-host-type: ip
+        url: http://localhost:8083
+management:
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
