@@ -1,0 +1,45 @@
+scrape_configs:
+  - job_name: admin_service
+    static_configs:
+      - targets: [ "http://172.17.0.1:8083" ]
+        labels:
+          application: admin-service
+    metrics_path: /actuator/prometheus
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: ljVR40E3RhU6llmzkcaZpZZwC6eRcFs5
+      token_url: http://172.17.0.1:8082/realms/digital-bookkeeping/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+
+  - job_name: bookkeeping_service
+    static_configs:
+      - targets: [ "http://172.17.0.1:8080" ]
+        labels:
+          application: bookkeeping-service
+    metrics_path: /actuator/prometheus
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: ljVR40E3RhU6llmzkcaZpZZwC6eRcFs5
+      token_url: http://172.17.0.1:8082/realms/digital-bookkeeping/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+
+  - job_name: librarian_app
+    static_configs:
+      - targets: [ "http://172.17.0.1:8081" ]
+        labels:
+          application: librarian-app
+    metrics_path: /actuator/prometheus
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: ljVR40E3RhU6llmzkcaZpZZwC6eRcFs5
+      token_url: http://172.17.0.1:8082/realms/digital-bookkeeping/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials

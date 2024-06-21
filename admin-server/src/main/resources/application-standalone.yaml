@@ -5,7 +5,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8082/realms/digital-bookkeeping
+          issuer-uri: http://172.17.0.1:8082/realms/digital-bookkeeping
       client:
         provider:
           keycloak:
@@ -25,3 +25,10 @@ spring:
               - openid
             client-id: admin-service
             client-secret: AZI64bu9zyjVku8eOYyLBcvi5IjuH9ZK
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus

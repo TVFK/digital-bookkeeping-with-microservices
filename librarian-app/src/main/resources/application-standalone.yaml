@@ -20,7 +20,7 @@ spring:
       client:
         provider:
           keycloak:
-            issuer-uri: http://localhost:8082/realms/digital-bookkeeping
+            issuer-uri: http://172.17.0.1:8082/realms/digital-bookkeeping
             user-name-attribute: preferred_username
         registration:
           keycloak:
@@ -40,7 +40,7 @@ spring:
               - metrics_server
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8082/realms/digital-bookkeeping
+          issuer-uri: http://172.17.0.1:8082/realms/digital-bookkeeping
 management:
   health:
     livenessstate:
