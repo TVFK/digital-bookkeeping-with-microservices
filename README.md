@@ -1,4 +1,4 @@
-### PostgreSQL
+ ### PostgreSQL
 
 **Used as a database in the bookkeeping-service module** 
 
@@ -23,6 +23,8 @@ docker run --name bookkkeeping-metrics -p 8428:8428 -v ./config/victoria-metrics
 ```
 
 ### Grafana
+
+**Used to visualize metrics, logs and traces**
 
 ```shell
 docker run --name bookkeeping-grafana -p 3000:3000 -v ./data/grafana:/var/lib/grafana -u "$(id -u)" grafana/grafana:10.2.4
