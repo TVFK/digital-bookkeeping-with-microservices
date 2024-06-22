@@ -2,12 +2,15 @@ package ru.taf.config;
 
 import de.codecentric.boot.admin.client.registration.BlockingRegistrationClient;
 import de.codecentric.boot.admin.client.registration.RegistrationClient;
+import io.micrometer.observation.ObservationRegistry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.client.observation.DefaultClientRequestObservationConvention;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -27,36 +30,40 @@ import java.util.Objects;
 public class ClientConfig {
 
     @Bean
-    public RestClientPeopleRestClient peopleRestClient(
-            @Value("${services.bookkeeping.uri:http://localhost:8080}") String bookkeepingServiceBaseUri,
+    @Scope("prototype")
+    public RestClient.Builder servicesRestClientBuilder(
             @Value("${services.bookkeeping.registration-id:keycloak}") String registrationId,
             ClientRegistrationRepository clientRegistrationRepository,
-            OAuth2AuthorizedClientRepository authorizedClientRepository) {
-        return new RestClientPeopleRestClient(RestClient.builder()
-                .baseUrl(bookkeepingServiceBaseUri)
+            OAuth2AuthorizedClientRepository authorizedClientRepository,
+            ObservationRegistry observationRegistry
+    ){
+        return RestClient.builder()
                 .requestInterceptor(new OAuth2ClientHttpRequestInterceptor(
                         new DefaultOAuth2AuthorizedClientManager(
                                 clientRegistrationRepository,
                                 authorizedClientRepository
                         ), registrationId
                 ))
+                .observationRegistry(observationRegistry)
+                .observationConvention(new DefaultClientRequestObservationConvention());
+    }
+
+    @Bean
+    public RestClientPeopleRestClient peopleRestClient(
+            @Value("${services.bookkeeping.uri:http://localhost:8080}") String bookkeepingServiceBaseUri,
+            RestClient.Builder servicesRestClientBuilder
+            ) {
+        return new RestClientPeopleRestClient(servicesRestClientBuilder
+                .baseUrl(bookkeepingServiceBaseUri)
                 .build());
     }
 
     @Bean
     public RestClientBooksRestClient booksRestClient(
             @Value("${services.bookkeeping.uri:http://localhost:8080}") String bookkeepingServiceBaseUri,
-            @Value("${services.bookkeeping.registration-id:keycloak}") String registrationId,
-            ClientRegistrationRepository clientRegistrationRepository,
-            OAuth2AuthorizedClientRepository authorizedClientRepository) {
-        return new RestClientBooksRestClient(RestClient.builder()
+            RestClient.Builder servicesRestClientBuilder) {
+        return new RestClientBooksRestClient(servicesRestClientBuilder
                 .baseUrl(bookkeepingServiceBaseUri)
-                .requestInterceptor(new OAuth2ClientHttpRequestInterceptor(
-                        new DefaultOAuth2AuthorizedClientManager(
-                                clientRegistrationRepository,
-                                authorizedClientRepository
-                        ), registrationId
-                ))
                 .build());
     }
 
