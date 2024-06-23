@@ -1,0 +1,27 @@
+server:
+  port: 8761
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            user-name-attribute: preferred_username
+            issuer-uri: http://172.20.146.73:8082/realms/digital-bookkeeping
+        registration:
+          keycloak:
+            client-id: eureka-server
+            client-secret: hgubNFrgD2vGfWx6tsI45DSUA1Z6BEyp
+            scope:
+              - openid
+      resourceserver:
+        jwt:
+          issuer-uri: http://172.20.146.73:8082/realms/digital-bookkeeping

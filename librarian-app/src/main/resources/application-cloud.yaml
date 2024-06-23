@@ -3,7 +3,7 @@ server:
 
 services:
   bookkeeping:
-    uri: http://localhost:8080
+    uri: lb://bookkeeping-service
     registration-id: keycloak
 
 spring:
@@ -12,11 +12,7 @@ spring:
   boot:
     admin:
       client:
-        url: http://localhost:8083
-        instance:
-          name: librarian-app
-          service-host-type: ip
-        enabled: true
+        enabled: false
   security:
     oauth2:
       client:
@@ -40,6 +36,13 @@ spring:
             authorization-grant-type: client_credentials
             scope:
               - metrics_server
+          discovery:
+            provider: keycloak
+            client-id: librarian-app
+            client-secret: twqt30F7zVKXfTeGZDTjXouWn1RsEHd7
+            authorization-grant-type: client_credentials
+            scope:
+              - discovery
       resourceserver:
         jwt:
           issuer-uri: http://172.20.146.73:8082/realms/digital-bookkeeping
@@ -60,5 +63,9 @@ management:
     sampling:
       probability: 0.3
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
-    enabled: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: false

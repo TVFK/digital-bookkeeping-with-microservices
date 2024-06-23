@@ -6,6 +6,9 @@ import io.micrometer.observation.ObservationRegistry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -29,23 +32,52 @@ import java.util.Objects;
 @Configuration
 public class ClientConfig {
 
-    @Bean
-    @Scope("prototype")
-    public RestClient.Builder servicesRestClientBuilder(
-            @Value("${services.bookkeeping.registration-id:keycloak}") String registrationId,
-            ClientRegistrationRepository clientRegistrationRepository,
-            OAuth2AuthorizedClientRepository authorizedClientRepository,
-            ObservationRegistry observationRegistry
-    ){
-        return RestClient.builder()
-                .requestInterceptor(new OAuth2ClientHttpRequestInterceptor(
-                        new DefaultOAuth2AuthorizedClientManager(
-                                clientRegistrationRepository,
-                                authorizedClientRepository
-                        ), registrationId
-                ))
-                .observationRegistry(observationRegistry)
-                .observationConvention(new DefaultClientRequestObservationConvention());
+    @Configuration
+    @ConditionalOnProperty(name = "eureka.client.enabled", havingValue = "false")
+    public static class StandaloneClientConfig{
+        @Bean
+        @Scope("prototype")
+        public RestClient.Builder servicesRestClientBuilder(
+                @Value("${services.bookkeeping.registration-id:keycloak}") String registrationId,
+                ClientRegistrationRepository clientRegistrationRepository,
+                OAuth2AuthorizedClientRepository authorizedClientRepository,
+                ObservationRegistry observationRegistry
+        ){
+            return RestClient.builder()
+                    .requestInterceptor(new OAuth2ClientHttpRequestInterceptor(
+                            new DefaultOAuth2AuthorizedClientManager(
+                                    clientRegistrationRepository,
+                                    authorizedClientRepository
+                            ), registrationId
+                    ))
+                    .observationRegistry(observationRegistry)
+                    .observationConvention(new DefaultClientRequestObservationConvention());
+        }
+    }
+
+    @Configuration
+    @ConditionalOnProperty(name = "eureka.client.enabled", havingValue = "true", matchIfMissing = true)
+    public static class CloudClientConfig{
+        @Bean
+        @Scope("prototype")
+        public RestClient.Builder servicesRestClientBuilder(
+                @Value("${services.bookkeeping.registration-id:keycloak}") String registrationId,
+                ClientRegistrationRepository clientRegistrationRepository,
+                OAuth2AuthorizedClientRepository authorizedClientRepository,
+                ObservationRegistry observationRegistry,
+                LoadBalancerClient loadBalancerClient
+        ){
+            return RestClient.builder()
+                    .requestInterceptor(new LoadBalancerInterceptor(loadBalancerClient))
+                    .requestInterceptor(new OAuth2ClientHttpRequestInterceptor(
+                            new DefaultOAuth2AuthorizedClientManager(
+                                    clientRegistrationRepository,
+                                    authorizedClientRepository
+                            ), registrationId
+                    ))
+                    .observationRegistry(observationRegistry)
+                    .observationConvention(new DefaultClientRequestObservationConvention());
+        }
     }
 
     @Bean
