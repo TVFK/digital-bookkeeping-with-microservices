@@ -1,13 +1,4 @@
-server:
-  port: 8080
-
 spring:
-  application:
-    name: bookkeeping-service
-  boot:
-    admin:
-      client:
-        enabled: false
   datasource:
     url: jdbc:postgresql://localhost:5433/bookkeeping-db
     username: librarian
@@ -31,13 +22,14 @@ spring:
             authorization-grant-type: client_credentials
             scope:
               - metrics_server
-          discovery:
-            provider: keycloak
-            client-id: bookkeeping-service
-            client-secret: OXtKlZ844xE9MtcMmUqJ76zmryQ9lKQH
-            authorization-grant-type: client_credentials
-            scope:
-              - discovery
+  boot:
+    admin:
+      client:
+        enabled: true
+        instance:
+          name: bookkeeping-service
+          service-host-type: ip
+        url: http://localhost:8083
 management:
   health:
     livenessstate:

@@ -1,0 +1,11 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: librarian-app
+  config:
+    import: 'optional:configserver'
+  cloud:
+    config:
+      uri: http://name:password@localhost:8888

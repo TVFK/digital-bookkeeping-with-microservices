@@ -1,24 +1,14 @@
-server:
-  port: 8080
+services:
+  bookkeeping:
+    uri: lb://bookkeeping-service
+    registration-id: keycloak
 
-spring:
-  application:
-    name: bookkeeping-service
   boot:
     admin:
       client:
         enabled: false
-  datasource:
-    url: jdbc:postgresql://localhost:5433/bookkeeping-db
-    username: librarian
-    password: librarian
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.xml
   security:
     oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://172.20.146.73:8082/realms/digital-bookkeeping
       client:
         provider:
           keycloak:
@@ -26,18 +16,30 @@ spring:
             user-name-attribute: preferred_username
         registration:
           keycloak:
-            client-id: bookkeeping-service
-            client-secret: OXtKlZ844xE9MtcMmUqJ76zmryQ9lKQH
+            client-id: librarian-app
+            client-secret: twqt30F7zVKXfTeGZDTjXouWn1RsEHd7
+            scope:
+              - openid
+              - view_library
+              - edit_library
+              - microprofile-jwt
+          metrics:
+            provider: keycloak
+            client-id: librarian-app
+            client-secret: twqt30F7zVKXfTeGZDTjXouWn1RsEHd7
             authorization-grant-type: client_credentials
             scope:
               - metrics_server
           discovery:
             provider: keycloak
-            client-id: bookkeeping-service
-            client-secret: OXtKlZ844xE9MtcMmUqJ76zmryQ9lKQH
+            client-id: librarian-app
+            client-secret: twqt30F7zVKXfTeGZDTjXouWn1RsEHd7
             authorization-grant-type: client_credentials
             scope:
               - discovery
+      resourceserver:
+        jwt:
+          issuer-uri: http://172.20.146.73:8082/realms/digital-bookkeeping
 management:
   health:
     livenessstate:
@@ -55,8 +57,8 @@ management:
     sampling:
       probability: 0.3
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
