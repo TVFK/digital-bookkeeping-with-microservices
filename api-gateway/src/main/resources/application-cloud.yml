@@ -1,0 +1,64 @@
+server:
+  port: 8084
+  forward-headers-strategy: framework
+spring:
+  boot:
+    admin:
+      client:
+        enabled: false
+  cloud:
+    config:
+      enabled: false
+    gateway:
+      routes:
+        - id: bookkeeping-service-route
+          uri: lb://bookkeeping-service
+          predicates:
+            - Host=bookkeeping.api.taf.ru.172.20.146.73.nip.io
+        - id: librarian-app-route
+          uri: lb://librarian-app
+          predicates:
+            - Host=librarian.app.taf.ru.172.20.146.73.nip.io
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://172.20.146.73/realms/digital-bookkeeping
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://172.20.146.73/realms/digital-bookkeeping
+            user-name-attribute: preferred_username
+        registration:
+          discovery:
+            provider: keycloak
+            client-id: api-gateway
+            client-secret: cIsbELd0cyvQz189czd785QBOpAQB8rR
+            authorization-grant-type: client_credentials
+            scope:
+              - discovery
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 1
+    hostname: 172.20.146.73
+  client:
+    service-url:
+      defaultZone: http://172.20.146.73:8761/eureka/
+    registryFetchIntervalSeconds: 1
+management:
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  zipkin:
+    tracing:
+      endpoint: http://172.20.146.73:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1.0

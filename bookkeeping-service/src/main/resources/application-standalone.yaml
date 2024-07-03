@@ -38,6 +38,9 @@ spring:
             authorization-grant-type: client_credentials
             scope:
               - discovery
+  cloud:
+    config:
+      enabled: false
 management:
   health:
     livenessstate:
@@ -56,7 +59,4 @@ management:
       probability: 0.3
 eureka:
   client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
+    enabled: false

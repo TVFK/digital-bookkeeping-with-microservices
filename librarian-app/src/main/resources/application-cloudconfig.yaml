@@ -1,11 +1,12 @@
 server:
   port: 8081
+  forward-headers-strategy: native
 
 spring:
   application:
     name: librarian-app
   config:
-    import: 'optional:configserver'
+    import: 'optional:configserver:'
   cloud:
     config:
-      uri: http://name:password@localhost:8888
+      uri: http://name:password@172.20.146.73:8888

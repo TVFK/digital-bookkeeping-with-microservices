@@ -1,0 +1,71 @@
+server:
+  port: 8084
+  forward-headers-strategy: framework
+spring:
+  application:
+    name: api-gateway
+  boot:
+    admin:
+      client:
+        url: http://172.20.146.73:8083
+        instance:
+          name: api-gateway
+          service-host-type: ip
+          service-base-url: http://172.20.146.73:8084
+          management-base-url: http://172.20.146.73:8084
+        enabled: true
+  cloud:
+    gateway:
+      routes:
+        - id: bookkeeping-service-route
+          uri: http://172.20.146.73:8080
+          predicates:
+            - Host=bookkeeping.api.taf.ru.172.20.146.73.nip.io
+        - id: librarian-app-route
+          uri: http://172.20.146.73:8081
+          predicates:
+            - Host=librarian.app.taf.ru.172.20.146.73.nip.io
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://172.20.146.73/realms/digital-bookkeeping
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://172.20.146.73/realms/digital-bookkeeping
+            user-name-attribute: preferred_username
+        registration:
+          discovery:
+            provider: keycloak
+            client-id: api-gateway
+            client-secret: cIsbELd0cyvQz189czd785QBOpAQB8rR
+            authorization-grant-type: client_credentials
+            scope:
+              - discovery
+          metrics:
+            provider: keycloak
+            client-id: api-gateway
+            client-secret: cIsbELd0cyvQz189czd785QBOpAQB8rR
+            authorization-grant-type: client_credentials
+            scope:
+              - metrics_server
+eureka:
+  client:
+    enabled: false
+management:
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  zipkin:
+    tracing:
+      endpoint: http://172.20.146.73:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1.0

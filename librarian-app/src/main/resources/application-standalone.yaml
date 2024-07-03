@@ -43,6 +43,9 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://172.20.146.73:8082/realms/digital-bookkeeping
+  cloud:
+    config:
+      enabled: false
 management:
   health:
     livenessstate:
