@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Objects;
+
 @Configuration
 public class ClientConfig {
 
@@ -32,10 +34,10 @@ public class ClientConfig {
                     if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                         OAuth2AuthorizedClient authorizedClient = authorizedClientManager.authorize(OAuth2AuthorizeRequest
                                 .withClientRegistrationId("keycloak")
-                                .principal("catalogue-service-metrics-client")
+                                .principal("bookkeeping-service")
                                 .build());
 
-                        request.getHeaders().setBearerAuth(authorizedClient.getAccessToken().getTokenValue());
+                        request.getHeaders().setBearerAuth(Objects.requireNonNull(authorizedClient, "oh, common, null again?").getAccessToken().getTokenValue());
                     }
 
                     return execution.execute(request, body);

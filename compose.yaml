@@ -1,0 +1,127 @@
+name: digital-bookkeeping
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0.7
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - './config/keycloak/import:/opt/keycloak/data/import'
+    ports:
+      - '8082:8080'
+    command: start-dev --import-realm
+  tempo:
+    image: grafana/tempo:2.3.1
+    command: -config.file=/etc/tempo.yaml
+    volumes:
+      - './config/tempo/tempo.yaml:/etc/tempo.yaml'
+    ports:
+      - '3200:3200'
+      - '9095:9095'
+      - '4317:4317'
+      - '4318:4318'
+      - '9411:9411'
+      - '14268:14268'
+  loki:
+    image: grafana/loki:2.9.4
+    ports:
+      - '3100:3100'
+  grafana:
+    image: grafana/grafana:10.2.4
+    ports:
+      - '3000:3000'
+    volumes:
+      - './data/grafana:/var/lib/grafana'
+    user: '1000'
+  victoria-metrics:
+    image: victoriametrics/victoria-metrics:v1.93.12
+    command: -promscrape.config=/promscrape.yaml
+    volumes:
+      - './config/victoria-metrics/promscrape_docker_compose.yaml:/promscrape.yaml'
+    ports:
+      - '8428:8428'
+  bookkeeping-db:
+    image: postgres:16
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_USER: librarian
+      POSTGRES_PASSWORD: librarian
+      POSTGRES_DB: bookkeeping
+  config-server:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: config-server/target/config-server-0.0.1-SNAPSHOT-exec.jar
+      tags:
+        - localhost:5000/taf/config-server:0.0.1
+    environment:
+      SPRING_PROFILES_ACTIVE: native
+      SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS: file:///config/{application}/{profile}
+      LOKI: http://loki:3100
+    volumes:
+      - './config/cloud:/config'
+    ports:
+      - '8888:8888'
+  eureka-server:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: eureka-server/target/eureka-server-0.0.1-SNAPSHOT-exec.jar
+      tags:
+        - localhost:5000/taf/eureka-server:0.0.1
+    environment:
+      SPRING_PROFILES_ACTIVE: cloudconfig
+      LOKI: http://loki:3100
+    ports:
+      - '8761:8761'
+  admin-server:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: admin-server/target/admin-server-0.0.1-SNAPSHOT-exec.jar
+      tags:
+        - localhost:5000/taf/admin-server:0.0.1
+    environment:
+      SPRING_PROFILES_ACTIVE: cloudconfig
+      LOKI: http://loki:3100
+    ports:
+      - '8083:8083'
+  bookkeeping-service:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: bookkeeping-service/target/bookkeeping-service-0.0.1-SNAPSHOT-exec.jar
+      tags:
+        - localhost:5000/taf/bookkeeping-service:0.0.1
+    environment:
+      SPRING_PROFILES_ACTIVE: cloudconfig, gateway
+      LOKI: http://loki:3100
+  librarian-app:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: librarian-app/target/librarian-app-0.0.1-SNAPSHOT-exec.jar
+      tags:
+        - localhost:5000/taf/librarian-app:0.0.1
+    environment:
+      SPRING_PROFILES_ACTIVE: cloudconfig, gateway
+      LOKI: http://loki:3100
+  api-gateway:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: api-gateway/target/api-gateway-0.0.1-SNAPSHOT-exec.jar
+      tags:
+        - localhost:5000/taf/api-gateway:0.0.1
+    environment:
+      SPRING_PROFILES_ACTIVE: cloudconfig
+      LOKI: http://loki:3100
+    ports:
+      - '8084:8084'
